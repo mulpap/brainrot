@@ -1285,37 +1285,47 @@
             SCHOOLS_DATABASE[city] = generateSchoolsForCity(city);
         });
 
-// Initialize the game
-function initGame() {
-    // СНАЧАЛА СКРЫВАЕМ ЛУТБОКС
-    document.getElementById('lootboxAnimation').classList.add('hidden');
-    
-    // Check if user is already registered
-    const savedData = localStorage.getItem('brainrotGameData');
-    if (savedData) {
-        gameData = JSON.parse(savedData);
-        showMain();
-    } else {
-        showRegistration();
-    }
-    
-    // Load cities into selects
-    loadCities();
-    
-    updateUI();
-    
-    // Setup class preview
-    setupClassPreview();
-    setupEditClassPreview();
-    
-    // Telegram Web App integration
-    if (window.Telegram && Telegram.WebApp) {
-        Telegram.WebApp.expand();
-        Telegram.WebApp.ready();
-        Telegram.WebApp.setHeaderColor('#667eea');
-        Telegram.WebApp.setBackgroundColor('#667eea');
-    }
-}
+        // Function to completely hide lootbox animation
+        function hideLootboxAnimation() {
+            const animation = document.getElementById('lootboxAnimation');
+            animation.classList.add('hidden');
+            
+            // Reset animation state
+            document.getElementById('revealedCard').classList.add('hidden');
+            document.getElementById('openingText').textContent = 'Открываем лутбокс...';
+        }
+
+        // Initialize the game
+        function initGame() {
+            // ВАЖНО: Сначала скрываем анимацию лутбокса
+            hideLootboxAnimation();
+            
+            // Check if user is already registered
+            const savedData = localStorage.getItem('brainrotGameData');
+            if (savedData) {
+                gameData = JSON.parse(savedData);
+                showMain();
+            } else {
+                showRegistration();
+            }
+            
+            // Load cities into selects
+            loadCities();
+            
+            updateUI();
+            
+            // Setup class preview
+            setupClassPreview();
+            setupEditClassPreview();
+            
+            // Telegram Web App integration
+            if (window.Telegram && Telegram.WebApp) {
+                Telegram.WebApp.expand();
+                Telegram.WebApp.ready();
+                Telegram.WebApp.setHeaderColor('#667eea');
+                Telegram.WebApp.setBackgroundColor('#667eea');
+            }
+        }
 
         // Load cities into select elements
         function loadCities() {
@@ -1470,7 +1480,9 @@ function initGame() {
             document.getElementById('profileSection').classList.add('hidden');
             document.getElementById('editSchoolForm').classList.add('hidden');
             document.getElementById('loadingScreen').classList.add('hidden');
-            document.getElementById('lootboxAnimation').classList.add('hidden');
+            
+            // ВАЖНО: Скрываем анимацию лутбокса
+            hideLootboxAnimation();
         }
 
         // Show school form
@@ -1634,7 +1646,7 @@ function initGame() {
 
         // Close animation
         function closeAnimation() {
-            document.getElementById('lootboxAnimation').classList.add('hidden');
+            hideLootboxAnimation();
             showMain();
         }
 
@@ -1853,7 +1865,9 @@ function initGame() {
             document.getElementById('profileSection').classList.add('hidden');
             document.getElementById('editSchoolForm').classList.add('hidden');
             document.getElementById('loadingScreen').classList.add('hidden');
-            document.getElementById('lootboxAnimation').classList.add('hidden');
+            
+            // ВАЖНО: Скрываем анимацию лутбокса
+            hideLootboxAnimation();
             
             document.getElementById(section + 'Section').classList.remove('hidden');
         }
@@ -1870,7 +1884,9 @@ function initGame() {
             document.getElementById('profileSection').classList.add('hidden');
             document.getElementById('editSchoolForm').classList.add('hidden');
             document.getElementById('loadingScreen').classList.add('hidden');
-            document.getElementById('lootboxAnimation').classList.add('hidden');
+            
+            // ВАЖНО: Скрываем анимацию лутбокса
+            hideLootboxAnimation();
         }
 
         // Show quiz questions section
@@ -1886,7 +1902,9 @@ function initGame() {
             document.getElementById('profileSection').classList.add('hidden');
             document.getElementById('editSchoolForm').classList.add('hidden');
             document.getElementById('loadingScreen').classList.add('hidden');
-            document.getElementById('lootboxAnimation').classList.add('hidden');
+            
+            // ВАЖНО: Скрываем анимацию лутбокса
+            hideLootboxAnimation();
         }
 
         // Start quiz
