@@ -648,6 +648,57 @@
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
+
+        /* Memory Game Styles */
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .memory-card {
+            aspect-ratio: 1;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+        }
+
+        .memory-card.flipped {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            transform: rotateY(180deg);
+        }
+
+        .memory-card.matched {
+            background: linear-gradient(135deg, #32CD32, #228B22);
+            cursor: default;
+        }
+
+        .memory-card:hover:not(.flipped):not(.matched) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .memory-stats {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .memory-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -793,6 +844,10 @@
                     <span>🎓</span>
                     <span>Квиз</span>
                 </button>
+                <button class="nav-btn" onclick="showSection('memory')">
+                    <span>🎮</span>
+                    <span>Мемо</span>
+                </button>
                 <button class="nav-btn" onclick="showSection('shop')">
                     <span>🛍️</span>
                     <span>Магазин</span>
@@ -848,6 +903,37 @@
                 </div>
                 <div class="quiz-options" id="quizOptions">
                     <!-- Options will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Memory Game Section -->
+        <div id="memorySection" class="hidden">
+            <button class="back-btn" onclick="showMain()">← Назад к меню</button>
+            <div class="section">
+                <div class="section-title">🎮 BrainRot Мемо</div>
+                <p style="text-align: center; margin-bottom: 15px;">
+                    Найди все пары BrainRot мемов!<br>
+                    <small>Награда: 50 монет за победу</small>
+                </p>
+                
+                <div class="memory-stats">
+                    <div>Ходы: <span id="memoryMoves">0</span></div>
+                    <div>Пары: <span id="memoryPairs">0</span>/10</div>
+                    <div>Время: <span id="memoryTimer">0</span>с</div>
+                </div>
+                
+                <div class="memory-grid" id="memoryGrid">
+                    <!-- Memory cards will be loaded here -->
+                </div>
+                
+                <div class="memory-controls">
+                    <button class="continue-btn" onclick="startMemoryGame()" id="memoryStartBtn">
+                        🎯 Начать игру
+                    </button>
+                    <button class="save-btn" onclick="showMain()" id="memoryEndBtn" style="display: none;">
+                        🏁 Завершить
+                    </button>
                 </div>
             </div>
         </div>
@@ -1100,7 +1186,9 @@
                 display_name: "Игрок",
                 total_quizzes: 0,
                 correct_answers: 0,
-                rating: 1000
+                rating: 1000,
+                memory_games: 0,
+                memory_wins: 0
             }
         };
 
@@ -1194,8 +1282,8 @@
             }
         };
 
-        // Quiz questions for general knowledge
-        const GENERAL_KNOWLEDGE_QUESTIONS = [
+        // Quiz questions database
+        const QUIZ_DATABASE = [
             // Наука
             {q: "Какая планета известна как 'Красная планета'?", opts: ["Венера", "Марс", "Юпитер", "Сатурн"], a: 1},
             {q: "Сколько элементов в периодической таблице?", opts: ["118", "92", "150", "108"], a: 0},
@@ -1230,11 +1318,12 @@
             {q: "Кто написал музыку к 'Лебединому озеру'?", opts: ["Чайковский", "Бах", "Моцарт", "Бетховен"], a: 0}
         ];
 
-        let currentQuiz = {
-            questions: [],
-            currentQuestion: 0,
-            correctAnswers: 0
-        };
+        // Memory Game BrainRot memes
+        const MEMORY_MEMES = [
+            "🧠", "🤪", "🎭", "🤡", "👻", "💀", "🤖", "👾",
+            "🐙", "🦑", "🐳", "🦈", "🐊", "🦖", "🐉", "🦄",
+            "🌈", "⭐", "🌟", "💫", "✨", "🎊", "🎉", "🎁"
+        ];
 
         // Database of Russian cities and schools (including Yuzhno-Sakhalinsk)
         const RUSSIAN_CITIES = [
@@ -1247,6 +1336,22 @@
             "Курск", "Улан-Удэ", "Ставрополь", "Сочи", "Тверь", "Магнитогорск", "Иваново",
             "Брянск", "Белгород", "Сургут", "Южно-Сахалинск"
         ];
+
+        let currentQuiz = {
+            questions: [],
+            currentQuestion: 0,
+            correctAnswers: 0
+        };
+
+        let memoryGame = {
+            cards: [],
+            flippedCards: [],
+            matchedPairs: 0,
+            moves: 0,
+            timer: 0,
+            timerInterval: null,
+            gameStarted: false
+        };
 
         // Function to generate schools for a city
         function generateSchoolsForCity(city) {
@@ -1570,7 +1675,7 @@
             }
         }
 
-        // Buy lootbox function
+        // Buy lootbox function - ИСПРАВЛЕНА ОШИБКА
         function buyLootbox(type) {
             const lootbox = LOOTBOXES[type];
             
@@ -1638,7 +1743,7 @@
             showMain();
         }
 
-        // Open lootbox and get random card
+        // Open lootbox and get random card - ИСПРАВЛЕНА ОШИБКА
         function openLootbox(type) {
             const lootbox = LOOTBOXES[type];
             const random = Math.random() * 100;
@@ -1670,8 +1775,12 @@
                 selectedCard = allRarityCards[Math.floor(Math.random() * allRarityCards.length)];
             }
             
-            // Mark card as obtained
-            selectedCard.obtained = true;
+            // Mark card as obtained - ИСПРАВЛЕНА ОШИБКА
+            const cardIndex = ALL_CARDS.findIndex(card => card.name === selectedCard.name);
+            if (cardIndex !== -1) {
+                ALL_CARDS[cardIndex].obtained = true;
+            }
+            
             return selectedCard;
         }
 
@@ -1803,6 +1912,8 @@
                     <div>🎴 Карт: ${collected}/${ALL_CARDS.length}</div>
                     <div>📊 Квизов: ${profile.total_quizzes}</div>
                     <div>🎯 Точность: ${accuracy.toFixed(1)}%</div>
+                    <div>🎮 Мемо игр: ${profile.memory_games}</div>
+                    <div>🏆 Побед в Мемо: ${profile.memory_wins}</div>
                     <div>🏆 Рейтинг: ${profile.rating}</div>
                 </div>
             `;
@@ -1844,9 +1955,9 @@
         function hideAllScreens() {
             const screens = [
                 'registrationScreen', 'schoolFormScreen', 'mainScreen', 
-                'quizSection', 'quizQuestionsSection', 'shopSection',
-                'inventorySection', 'collectionSection', 'profileSection',
-                'editSchoolForm', 'loadingScreen'
+                'quizSection', 'quizQuestionsSection', 'memorySection',
+                'shopSection', 'inventorySection', 'collectionSection', 
+                'profileSection', 'editSchoolForm', 'loadingScreen'
             ];
             
             screens.forEach(screen => {
@@ -1877,7 +1988,7 @@
         // Start quiz
         function startQuiz() {
             // Select 5 random questions
-            const shuffledQuestions = [...GENERAL_KNOWLEDGE_QUESTIONS]
+            const shuffledQuestions = [...QUIZ_DATABASE]
                 .sort(() => 0.5 - Math.random())
                 .slice(0, 5);
             
@@ -1943,6 +2054,122 @@
             showSection('quiz');
             
             alert(`🎉 Квиз завершен!\n✅ Правильных ответов: ${correct}/${total}\n💰 Награда: +${coinsReward} монет`);
+        }
+
+        // Memory Game functions
+        function startMemoryGame() {
+            memoryGame = {
+                cards: [],
+                flippedCards: [],
+                matchedPairs: 0,
+                moves: 0,
+                timer: 0,
+                timerInterval: null,
+                gameStarted: true
+            };
+
+            // Create pairs of memes
+            const selectedMemes = [...MEMORY_MEMES].sort(() => 0.5 - Math.random()).slice(0, 10);
+            const cards = [...selectedMemes, ...selectedMemes];
+            
+            // Shuffle cards
+            memoryGame.cards = cards.sort(() => 0.5 - Math.random());
+
+            // Create card elements
+            const grid = document.getElementById('memoryGrid');
+            grid.innerHTML = '';
+            
+            memoryGame.cards.forEach((meme, index) => {
+                const card = document.createElement('div');
+                card.className = 'memory-card';
+                card.dataset.index = index;
+                card.dataset.meme = meme;
+                card.innerHTML = '❓';
+                card.onclick = () => flipCard(index);
+                grid.appendChild(card);
+            });
+
+            // Start timer
+            memoryGame.timerInterval = setInterval(() => {
+                memoryGame.timer++;
+                document.getElementById('memoryTimer').textContent = memoryGame.timer;
+            }, 1000);
+
+            // Update UI
+            document.getElementById('memoryMoves').textContent = memoryGame.moves;
+            document.getElementById('memoryPairs').textContent = memoryGame.matchedPairs;
+            document.getElementById('memoryStartBtn').style.display = 'none';
+            document.getElementById('memoryEndBtn').style.display = 'block';
+
+            gameData.profile.memory_games++;
+            saveGameData();
+        }
+
+        function flipCard(index) {
+            if (!memoryGame.gameStarted) return;
+            
+            const card = document.querySelector(`.memory-card[data-index="${index}"]`);
+            const flippedCards = document.querySelectorAll('.memory-card.flipped:not(.matched)');
+            
+            // Prevent flipping already flipped or matched cards
+            if (card.classList.contains('flipped') || card.classList.contains('matched') || flippedCards.length >= 2) {
+                return;
+            }
+            
+            // Flip card
+            card.classList.add('flipped');
+            card.textContent = card.dataset.meme;
+            memoryGame.flippedCards.push(index);
+            
+            // Check for match
+            if (memoryGame.flippedCards.length === 2) {
+                memoryGame.moves++;
+                document.getElementById('memoryMoves').textContent = memoryGame.moves;
+                
+                const [firstIndex, secondIndex] = memoryGame.flippedCards;
+                const firstCard = document.querySelector(`.memory-card[data-index="${firstIndex}"]`);
+                const secondCard = document.querySelector(`.memory-card[data-index="${secondIndex}"]`);
+                
+                if (firstCard.dataset.meme === secondCard.dataset.meme) {
+                    // Match found
+                    firstCard.classList.add('matched');
+                    secondCard.classList.add('matched');
+                    memoryGame.matchedPairs++;
+                    document.getElementById('memoryPairs').textContent = memoryGame.matchedPairs;
+                    memoryGame.flippedCards = [];
+                    
+                    // Check for win
+                    if (memoryGame.matchedPairs === 10) {
+                        finishMemoryGame();
+                    }
+                } else {
+                    // No match - flip back after delay
+                    setTimeout(() => {
+                        firstCard.classList.remove('flipped');
+                        secondCard.classList.remove('flipped');
+                        firstCard.textContent = '❓';
+                        secondCard.textContent = '❓';
+                        memoryGame.flippedCards = [];
+                    }, 1000);
+                }
+            }
+        }
+
+        function finishMemoryGame() {
+            clearInterval(memoryGame.timerInterval);
+            memoryGame.gameStarted = false;
+            
+            const coinsReward = 50;
+            gameData.coins += coinsReward;
+            gameData.profile.memory_wins++;
+            
+            saveGameData();
+            updateUI();
+            
+            alert(`🎉 Поздравляем! Вы нашли все пары!\n⏱️ Время: ${memoryGame.timer} сек\n🎯 Ходы: ${memoryGame.moves}\n💰 Награда: +${coinsReward} монет`);
+            
+            document.getElementById('memoryStartBtn').style.display = 'block';
+            document.getElementById('memoryEndBtn').style.display = 'none';
         }
 
         // Initialize game when page loads
