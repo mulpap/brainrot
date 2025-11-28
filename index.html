@@ -186,7 +186,7 @@
         
         /* Hidden sections */
         .hidden {
-            display: none;
+            display: none !important;
         }
         
         /* Back button */
@@ -653,7 +653,7 @@
 <body>
     <div class="container">
         <!-- Registration Screen -->
-        <div id="registrationScreen">
+        <div id="registrationScreen" class="hidden">
             <div class="header">
                 <h1>🧠 BrainRot School</h1>
                 <p>Выбери свой статус:</p>
@@ -1469,25 +1469,13 @@
 
         // Show registration screen
         function showRegistration() {
+            hideAllScreens();
             document.getElementById('registrationScreen').classList.remove('hidden');
-            document.getElementById('mainScreen').classList.add('hidden');
-            document.getElementById('schoolFormScreen').classList.add('hidden');
-            document.getElementById('quizSection').classList.add('hidden');
-            document.getElementById('quizQuestionsSection').classList.add('hidden');
-            document.getElementById('shopSection').classList.add('hidden');
-            document.getElementById('inventorySection').classList.add('hidden');
-            document.getElementById('collectionSection').classList.add('hidden');
-            document.getElementById('profileSection').classList.add('hidden');
-            document.getElementById('editSchoolForm').classList.add('hidden');
-            document.getElementById('loadingScreen').classList.add('hidden');
-            
-            // ВАЖНО: Скрываем анимацию лутбокса
-            hideLootboxAnimation();
         }
 
         // Show school form
         function showSchoolForm() {
-            document.getElementById('registrationScreen').classList.add('hidden');
+            hideAllScreens();
             document.getElementById('schoolFormScreen').classList.remove('hidden');
         }
 
@@ -1501,7 +1489,7 @@
             // Load schools for current city
             loadEditSchools();
             
-            document.getElementById('profileSection').classList.add('hidden');
+            hideAllScreens();
             document.getElementById('editSchoolForm').classList.remove('hidden');
         }
 
@@ -1852,59 +1840,38 @@
             return names[rarity] || "Обычный";
         }
 
+        // Hide all screens
+        function hideAllScreens() {
+            const screens = [
+                'registrationScreen', 'schoolFormScreen', 'mainScreen', 
+                'quizSection', 'quizQuestionsSection', 'shopSection',
+                'inventorySection', 'collectionSection', 'profileSection',
+                'editSchoolForm', 'loadingScreen'
+            ];
+            
+            screens.forEach(screen => {
+                document.getElementById(screen).classList.add('hidden');
+            });
+            
+            // Всегда скрываем лутбокс
+            hideLootboxAnimation();
+        }
+
         // Navigation functions
         function showSection(section) {
-            document.getElementById('registrationScreen').classList.add('hidden');
-            document.getElementById('mainScreen').classList.add('hidden');
-            document.getElementById('schoolFormScreen').classList.add('hidden');
-            document.getElementById('quizSection').classList.add('hidden');
-            document.getElementById('quizQuestionsSection').classList.add('hidden');
-            document.getElementById('shopSection').classList.add('hidden');
-            document.getElementById('inventorySection').classList.add('hidden');
-            document.getElementById('collectionSection').classList.add('hidden');
-            document.getElementById('profileSection').classList.add('hidden');
-            document.getElementById('editSchoolForm').classList.add('hidden');
-            document.getElementById('loadingScreen').classList.add('hidden');
-            
-            // ВАЖНО: Скрываем анимацию лутбокса
-            hideLootboxAnimation();
-            
+            hideAllScreens();
             document.getElementById(section + 'Section').classList.remove('hidden');
         }
         
         function showMain() {
+            hideAllScreens();
             document.getElementById('mainScreen').classList.remove('hidden');
-            document.getElementById('registrationScreen').classList.add('hidden');
-            document.getElementById('schoolFormScreen').classList.add('hidden');
-            document.getElementById('quizSection').classList.add('hidden');
-            document.getElementById('quizQuestionsSection').classList.add('hidden');
-            document.getElementById('shopSection').classList.add('hidden');
-            document.getElementById('inventorySection').classList.add('hidden');
-            document.getElementById('collectionSection').classList.add('hidden');
-            document.getElementById('profileSection').classList.add('hidden');
-            document.getElementById('editSchoolForm').classList.add('hidden');
-            document.getElementById('loadingScreen').classList.add('hidden');
-            
-            // ВАЖНО: Скрываем анимацию лутбокса
-            hideLootboxAnimation();
         }
 
         // Show quiz questions section
         function showQuizQuestions() {
-            document.getElementById('registrationScreen').classList.add('hidden');
-            document.getElementById('mainScreen').classList.add('hidden');
-            document.getElementById('schoolFormScreen').classList.add('hidden');
-            document.getElementById('quizSection').classList.add('hidden');
+            hideAllScreens();
             document.getElementById('quizQuestionsSection').classList.remove('hidden');
-            document.getElementById('shopSection').classList.add('hidden');
-            document.getElementById('inventorySection').classList.add('hidden');
-            document.getElementById('collectionSection').classList.add('hidden');
-            document.getElementById('profileSection').classList.add('hidden');
-            document.getElementById('editSchoolForm').classList.add('hidden');
-            document.getElementById('loadingScreen').classList.add('hidden');
-            
-            // ВАЖНО: Скрываем анимацию лутбокса
-            hideLootboxAnimation();
         }
 
         // Start quiz
