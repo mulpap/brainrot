@@ -1,0 +1,1967 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrainRot School 🧠</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 15px;
+            color: white;
+        }
+        
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        /* User Stats */
+        .user-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+        
+        /* Navigation */
+        .nav-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+        
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            padding: 18px 10px;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Sections */
+        .section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .section-title {
+            font-size: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* Cards */
+        .cards-grid {
+            display: grid;
+            gap: 12px;
+        }
+        
+        .card {
+            border-radius: 15px;
+            padding: 15px;
+            color: #333;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid;
+        }
+        
+        .card.common { background: linear-gradient(135deg, #E8E8E8, #F5F5F5); border-color: #B0B0B0; }
+        .card.rare { background: linear-gradient(135deg, #87CEEB, #ADD8E6); border-color: #4682B4; }
+        .card.epic { background: linear-gradient(135deg, #9370DB, #BA55D3); border-color: #8A2BE2; }
+        .card.legendary { background: linear-gradient(135deg, #FFD700, #FFA500); border-color: #FF8C00; }
+        .card.secret { background: linear-gradient(135deg, #32CD32, #00FA9A); border-color: #228B22; }
+        .card.og { background: linear-gradient(135deg, #000000, #2F4F4F); border-color: #000000; color: white; }
+        .card.god { background: linear-gradient(135deg, #FF0000, #DC143C); border-color: #B22222; color: white; }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+        }
+        
+        .card.common::before { background: linear-gradient(90deg, #B0B0B0, #808080); }
+        .card.rare::before { background: linear-gradient(90deg, #4682B4, #1E90FF); }
+        .card.epic::before { background: linear-gradient(90deg, #8A2BE2, #9400D3); }
+        .card.legendary::before { background: linear-gradient(90deg, #FF8C00, #FF4500); }
+        .card.secret::before { background: linear-gradient(90deg, #228B22, #32CD32); }
+        .card.og::before { background: linear-gradient(90deg, #2F4F4F, #000000); }
+        .card.god::before { background: linear-gradient(90deg, #B22222, #FF0000); }
+        
+        .card h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .card.og .card-meta,
+        .card.god .card-meta { color: #CCC; }
+        
+        /* Progress */
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #FFD700, #FFA500);
+            border-radius: 4px;
+        }
+        
+        /* Hidden sections */
+        .hidden {
+            display: none;
+        }
+        
+        /* Back button */
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            width: 100%;
+            justify-content: center;
+            position: sticky;
+            top: 10px;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Class selection */
+        .class-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            margin-top: 15px;
+        }
+        
+        .class-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            padding: 10px 5px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #333;
+            transition: all 0.3s ease;
+        }
+        
+        .class-btn.current {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: white;
+        }
+        
+        .class-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        /* Registration */
+        .user-type-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .user-type-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            padding: 20px 15px;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #333;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-type-btn:hover {
+            transform: translateY(-3px);
+        }
+        
+        /* Quiz */
+        .quiz-question {
+            font-size: 18px;
+            margin-bottom: 20px;
+            text-align: center;
+            line-height: 1.4;
+        }
+        
+        .quiz-options {
+            display: grid;
+            gap: 10px;
+        }
+        
+        .quiz-option {
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            color: #333;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+        
+        .quiz-option:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: translateY(-2px);
+        }
+        
+        .start-quiz-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            padding: 25px 20px;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #333;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            width: 100%;
+        }
+        
+        .start-quiz-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            font-size: 18px;
+        }
+        
+        .profile-info {
+            line-height: 2;
+            margin-bottom: 20px;
+        }
+        
+        .rarity-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+        
+        .common-badge { background: #B0B0B0; color: white; }
+        .rare-badge { background: #4682B4; color: white; }
+        .epic-badge { background: #8A2BE2; color: white; }
+        .legendary-badge { background: #FF8C00; color: white; }
+        .secret-badge { background: #32CD32; color: white; }
+        .og-badge { background: #000000; color: white; }
+        .god-badge { background: #FF0000; color: white; }
+
+        /* Form styles */
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .form-input, .form-select {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .continue-btn, .save-btn, .buy-btn {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border: none;
+            padding: 15px;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            color: white;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .donate-btn {
+            background: linear-gradient(135deg, #FF416C, #FF4B2B);
+            border: none;
+            padding: 15px;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            color: white;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .continue-btn:hover, .save-btn:hover, .buy-btn:hover, .donate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Class info */
+        .class-info {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 15px;
+            border-radius: 15px;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        /* Edit button */
+        .edit-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+
+        .edit-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Loading for schools */
+        .schools-loading {
+            text-align: center;
+            padding: 10px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Lootbox styles */
+        .lootbox-grid {
+            display: grid;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .lootbox-card {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            border: 3px solid;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .lootbox-card.common { 
+            border-color: #B0B0B0; 
+            background: linear-gradient(135deg, rgba(176, 176, 176, 0.2), rgba(128, 128, 128, 0.1));
+        }
+        .lootbox-card.epic { 
+            border-color: #8A2BE2; 
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.2), rgba(148, 0, 211, 0.1));
+            box-shadow: 0 0 20px rgba(138, 43, 226, 0.3);
+        }
+        .lootbox-card.legendary { 
+            border-color: #FF8C00; 
+            background: linear-gradient(135deg, rgba(255, 140, 0, 0.2), rgba(255, 69, 0, 0.1));
+            box-shadow: 0 0 25px rgba(255, 140, 0, 0.4);
+            animation: glowLegendary 2s ease-in-out infinite alternate;
+        }
+        .lootbox-card.secret { 
+            border-color: #32CD32; 
+            background: linear-gradient(135deg, rgba(50, 205, 50, 0.2), rgba(34, 139, 34, 0.1));
+            box-shadow: 0 0 30px rgba(50, 205, 50, 0.5);
+            animation: glowSecret 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes glowLegendary {
+            from { box-shadow: 0 0 25px rgba(255, 140, 0, 0.4); }
+            to { box-shadow: 0 0 35px rgba(255, 140, 0, 0.7); }
+        }
+
+        @keyframes glowSecret {
+            from { box-shadow: 0 0 30px rgba(50, 205, 50, 0.5); }
+            to { box-shadow: 0 0 45px rgba(50, 205, 50, 0.8); }
+        }
+
+        .lootbox-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .lootbox-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .lootbox-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .lootbox-price {
+            font-size: 20px;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-weight: bold;
+        }
+
+        .lootbox-chances {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-top: 15px;
+            line-height: 1.4;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .coins-icon {
+            color: #FFD700;
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+        }
+
+        .money-icon {
+            color: #32CD32;
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(50, 205, 50, 0.5);
+        }
+
+        /* Lootbox opening animation */
+        .lootbox-opening {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .chest-container {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .chest {
+            font-size: 120px;
+            animation: bounce 0.5s ease infinite alternate;
+        }
+
+        .chest.common { color: #B0B0B0; }
+        .chest.epic { color: #8A2BE2; text-shadow: 0 0 20px #8A2BE2; }
+        .chest.legendary { color: #FF8C00; text-shadow: 0 0 25px #FF8C00; animation: bounceGlow 0.5s ease infinite alternate; }
+        .chest.secret { color: #32CD32; text-shadow: 0 0 30px #32CD32; animation: bounceGlowFast 0.4s ease infinite alternate; }
+
+        @keyframes bounce {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
+        }
+
+        @keyframes bounceGlow {
+            from { transform: scale(1); text-shadow: 0 0 25px #FF8C00; }
+            to { transform: scale(1.15); text-shadow: 0 0 35px #FF8C00; }
+        }
+
+        @keyframes bounceGlowFast {
+            from { transform: scale(1); text-shadow: 0 0 30px #32CD32; }
+            to { transform: scale(1.2); text-shadow: 0 0 45px #32CD32; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .opening-text {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+            animation: pulse 1.5s ease infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .revealed-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            margin: 20px 0;
+            border: 3px solid;
+            max-width: 300px;
+            animation: cardReveal 0.5s ease;
+        }
+
+        @keyframes cardReveal {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .revealed-card h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .revealed-rarity {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .close-animation {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            color: white;
+            margin-top: 20px;
+        }
+
+        .close-animation:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Registration Screen -->
+        <div id="registrationScreen">
+            <div class="header">
+                <h1>🧠 BrainRot School</h1>
+                <p>Выбери свой статус:</p>
+            </div>
+            
+            <div class="user-type-buttons">
+                <button class="user-type-btn" onclick="showSchoolForm()">
+                    <span>🎒</span>
+                    <span>Ученик</span>
+                    <small>1-11 класс</small>
+                </button>
+                <button class="user-type-btn" onclick="registerUser('adult')">
+                    <span>👨‍🎓</span>
+                    <span>Взрослый</span>
+                    <small>Студент/Выпускник</small>
+                </button>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">ℹ️ Информация</div>
+                <p style="font-size: 14px; line-height: 1.4;">
+                    • Ученики: классы 1-11 с вопросами по школьной программе<br>
+                    • Взрослые: вопросы на общую эрудицию и логику<br>
+                    • Собирай карточки с BrainRot мемами!
+                </p>
+            </div>
+        </div>
+
+        <!-- School Registration Form -->
+        <div id="schoolFormScreen" class="hidden">
+            <button class="back-btn" onclick="showRegistration()">← Назад</button>
+            
+            <div class="header">
+                <h1>🎒 Регистрация ученика</h1>
+                <p>Заполни информацию о школе</p>
+            </div>
+            
+            <div class="section">
+                <div class="form-group">
+                    <label class="form-label">🏙️ Город/Населенный пункт</label>
+                    <select class="form-select" id="citySelect" onchange="loadSchools()">
+                        <option value="">Выберите город</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">🏫 Школа</label>
+                    <select class="form-select" id="schoolSelect" disabled>
+                        <option value="">Сначала выберите город</option>
+                    </select>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">📚 Класс</label>
+                        <select class="form-select" id="classSelect">
+                            <option value="1">1 класс</option>
+                            <option value="2">2 класс</option>
+                            <option value="3">3 класс</option>
+                            <option value="4">4 класс</option>
+                            <option value="5">5 класс</option>
+                            <option value="6">6 класс</option>
+                            <option value="7">7 класс</option>
+                            <option value="8">8 класс</option>
+                            <option value="9">9 класс</option>
+                            <option value="10">10 класс</option>
+                            <option value="11">11 класс</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">🔤 Буква класса</label>
+                        <select class="form-select" id="classLetterSelect">
+                            <option value="А">А</option>
+                            <option value="Б">Б</option>
+                            <option value="В">В</option>
+                            <option value="Г">Г</option>
+                            <option value="Д">Д</option>
+                            <option value="Е">Е</option>
+                            <option value="Ё">Ё</option>
+                            <option value="Ж">Ж</option>
+                            <option value="З">З</option>
+                            <option value="И">И</option>
+                            <option value="К">К</option>
+                            <option value="Л">Л</option>
+                            <option value="М">М</option>
+                            <option value="Н">Н</option>
+                            <option value="О">О</option>
+                            <option value="П">П</option>
+                            <option value="Р">Р</option>
+                            <option value="С">С</option>
+                            <option value="Т">Т</option>
+                            <option value="У">У</option>
+                            <option value="Ф">Ф</option>
+                            <option value="Х">Х</option>
+                            <option value="Э">Э</option>
+                            <option value="Ю">Ю</option>
+                            <option value="Я">Я</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="class-info">
+                    <div>🏆 Твой класс:</div>
+                    <div id="classPreview" style="font-size: 18px; font-weight: bold; margin: 5px 0;">-</div>
+                    <div style="font-size: 12px; opacity: 0.8;">Все одноклассники автоматически в одной группе!</div>
+                </div>
+                
+                <button class="continue-btn" onclick="completeStudentRegistration()">
+                    🚀 Начать учиться!
+                </button>
+            </div>
+        </div>
+        
+        <!-- Main Screen -->
+        <div id="mainScreen" class="hidden">
+            <div class="header">
+                <h1>🧠 BrainRot School</h1>
+                <p id="userGreeting">Собирай мемы, стань легендой!</p>
+            </div>
+            
+            <div class="user-stats">
+                <div class="stat-card">
+                    <div>🎒 Класс</div>
+                    <div class="stat-value" id="currentClass">-</div>
+                    <div id="userTypeInfo">ученик</div>
+                </div>
+                <div class="stat-card">
+                    <div>💰 Монеты</div>
+                    <div class="stat-value" id="coinsCount">100</div>
+                    <div id="dailyCoins">+0 сегодня</div>
+                </div>
+            </div>
+            
+            <div class="nav-grid">
+                <button class="nav-btn" onclick="showSection('quiz')">
+                    <span>🎓</span>
+                    <span>Квиз</span>
+                </button>
+                <button class="nav-btn" onclick="showSection('shop')">
+                    <span>🛍️</span>
+                    <span>Магазин</span>
+                </button>
+                <button class="nav-btn" onclick="showSection('inventory')">
+                    <span>🎴</span>
+                    <span>Инвентарь</span>
+                </button>
+                <button class="nav-btn" onclick="showSection('collection')">
+                    <span>📚</span>
+                    <span>Коллекция</span>
+                </button>
+                <button class="nav-btn" onclick="showSection('profile')">
+                    <span>👤</span>
+                    <span>Профиль</span>
+                </button>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">👥 Мой класс</div>
+                <div style="text-align: center; margin-bottom: 10px;">
+                    <strong id="fullClassInfo">-</strong>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="collectionProgress"></div>
+                </div>
+                <div style="text-align: center; font-size: 14px; color: rgba(255,255,255,0.8);">
+                    <span id="collectedCards">0</span> из <span id="totalCards">0</span> карточек собрано
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quiz Section -->
+        <div id="quizSection" class="hidden">
+            <button class="back-btn" onclick="showMain()">← Назад к меню</button>
+            <div class="section">
+                <div class="section-title">🎓 Проверь свою эрудицию</div>
+                <button class="start-quiz-btn" onclick="startQuiz()">
+                    <span>🚀</span>
+                    <span>Начать квиз</span>
+                    <small>5 вопросов на разные темы</small>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Quiz Questions Section -->
+        <div id="quizQuestionsSection" class="hidden">
+            <button class="back-btn" onclick="showSection('quiz')">← Назад</button>
+            <div class="section">
+                <div class="section-title">📝 Вопрос <span id="currentQuestionNumber">1</span>/5</div>
+                <div class="quiz-question" id="quizQuestion">
+                    Вопрос загружается...
+                </div>
+                <div class="quiz-options" id="quizOptions">
+                    <!-- Options will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Shop Section -->
+        <div id="shopSection" class="hidden">
+            <button class="back-btn" onclick="showMain()">← Назад к меню</button>
+            <div class="section">
+                <div class="section-title">🛍️ Магазин лутбоксов</div>
+                <div class="lootbox-grid">
+                    <!-- Common Lootbox -->
+                    <div class="lootbox-card common">
+                        <span class="lootbox-icon">📦</span>
+                        <div class="lootbox-title">Обычный лутбокс</div>
+                        <div>Шанс получить:</div>
+                        <div class="lootbox-chances">
+                            • Обычные: 70%<br>
+                            • Рарные: 25%<br>
+                            • Эпик: 5%
+                        </div>
+                        <div class="lootbox-price">
+                            <span class="coins-icon">💰</span> 100 монет
+                        </div>
+                        <button class="buy-btn" onclick="confirmPurchase('common')">
+                            Купить за монеты
+                        </button>
+                    </div>
+
+                    <!-- Epic Lootbox -->
+                    <div class="lootbox-card epic">
+                        <span class="lootbox-icon">💎</span>
+                        <div class="lootbox-title">Эпик лутбокс</div>
+                        <div>Шанс получить:</div>
+                        <div class="lootbox-chances">
+                            • Рарные: 50%<br>
+                            • Эпик: 40%<br>
+                            • Легендарные: 10%
+                        </div>
+                        <div class="lootbox-price">
+                            <span class="coins-icon">💰</span> 500 монет
+                        </div>
+                        <button class="buy-btn" onclick="confirmPurchase('epic')">
+                            Купить за монеты
+                        </button>
+                    </div>
+
+                    <!-- Legendary Lootbox -->
+                    <div class="lootbox-card legendary">
+                        <span class="lootbox-icon">🌟</span>
+                        <div class="lootbox-title">Легендарный лутбокс</div>
+                        <div>Шанс получить:</div>
+                        <div class="lootbox-chances">
+                            • Эпик: 40%<br>
+                            • Легендарные: 35%<br>
+                            • Секретные: 20%<br>
+                            • OG: 5%
+                        </div>
+                        <div class="lootbox-price">
+                            <span class="money-icon">💳</span> 199 ₽
+                        </div>
+                        <button class="donate-btn" onclick="confirmPurchase('legendary')">
+                            Купить за донат
+                        </button>
+                    </div>
+
+                    <!-- Secret Lootbox -->
+                    <div class="lootbox-card secret">
+                        <span class="lootbox-icon">🔮</span>
+                        <div class="lootbox-title">Секретный лутбокс</div>
+                        <div>Шанс получить:</div>
+                        <div class="lootbox-chances">
+                            • Легендарные: 40%<br>
+                            • Секретные: 30%<br>
+                            • OG: 20%<br>
+                            • Бог BrainRot: 10%
+                        </div>
+                        <div class="lootbox-price">
+                            <span class="money-icon">💳</span> 499 ₽
+                        </div>
+                        <button class="donate-btn" onclick="confirmPurchase('secret')">
+                            Купить за донат
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Inventory Section -->
+        <div id="inventorySection" class="hidden">
+            <button class="back-btn" onclick="showMain()">← Назад к меню</button>
+            <div class="section">
+                <div class="section-title">🎴 Твои карты</div>
+                <div class="cards-grid" id="inventoryList">
+                    <!-- Cards will be loaded here -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Collection Section -->
+        <div id="collectionSection" class="hidden">
+            <button class="back-btn" onclick="showMain()">← Назад к меню</button>
+            <div class="section">
+                <div class="section-title">📚 Вся коллекция</div>
+                <div class="cards-grid" id="collectionList">
+                    <!-- All cards will be loaded here -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Profile Section -->
+        <div id="profileSection" class="hidden">
+            <button class="back-btn" onclick="showMain()">← Назад к меню</button>
+            <div class="section">
+                <div class="section-title">👤 Мой профиль</div>
+                <div id="profileContent">
+                    <!-- Profile info will be loaded here -->
+                </div>
+                
+                <div class="section-title" style="margin-top: 20px;">
+                    🏫 Информация о школе
+                    <button class="edit-btn" onclick="showEditSchoolForm()">✏️ Изменить</button>
+                </div>
+                <div id="schoolInfo">
+                    <!-- School info will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit School Form -->
+        <div id="editSchoolForm" class="hidden">
+            <button class="back-btn" onclick="showSection('profile')">← Назад к профилю</button>
+            
+            <div class="header">
+                <h1>✏️ Изменить школу</h1>
+                <p>Обнови информацию о школе</p>
+            </div>
+            
+            <div class="section">
+                <div class="form-group">
+                    <label class="form-label">🏙️ Город/Населенный пункт</label>
+                    <select class="form-select" id="editCitySelect" onchange="loadEditSchools()">
+                        <option value="">Выберите город</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">🏫 Школа</label>
+                    <select class="form-select" id="editSchoolSelect" disabled>
+                        <option value="">Сначала выберите город</option>
+                    </select>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">📚 Класс</label>
+                        <select class="form-select" id="editClassSelect">
+                            <option value="1">1 класс</option>
+                            <option value="2">2 класс</option>
+                            <option value="3">3 класс</option>
+                            <option value="4">4 класс</option>
+                            <option value="5">5 класс</option>
+                            <option value="6">6 класс</option>
+                            <option value="7">7 класс</option>
+                            <option value="8">8 класс</option>
+                            <option value="9">9 класс</option>
+                            <option value="10">10 класс</option>
+                            <option value="11">11 класс</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">🔤 Буква класса</label>
+                        <select class="form-select" id="editClassLetterSelect">
+                            <option value="А">А</option>
+                            <option value="Б">Б</option>
+                            <option value="В">В</option>
+                            <option value="Г">Г</option>
+                            <option value="Д">Д</option>
+                            <option value="Е">Е</option>
+                            <option value="Ё">Ё</option>
+                            <option value="Ж">Ж</option>
+                            <option value="З">З</option>
+                            <option value="И">И</option>
+                            <option value="К">К</option>
+                            <option value="Л">Л</option>
+                            <option value="М">М</option>
+                            <option value="Н">Н</option>
+                            <option value="О">О</option>
+                            <option value="П">П</option>
+                            <option value="Р">Р</option>
+                            <option value="С">С</option>
+                            <option value="Т">Т</option>
+                            <option value="У">У</option>
+                            <option value="Ф">Ф</option>
+                            <option value="Х">Х</option>
+                            <option value="Э">Э</option>
+                            <option value="Ю">Ю</option>
+                            <option value="Я">Я</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="class-info">
+                    <div>🏆 Новый класс:</div>
+                    <div id="editClassPreview" style="font-size: 18px; font-weight: bold; margin: 5px 0;">-</div>
+                </div>
+                
+                <button class="save-btn" onclick="saveSchoolChanges()">
+                    💾 Сохранить изменения
+                </button>
+            </div>
+        </div>
+
+        <!-- Lootbox Opening Animation -->
+        <div id="lootboxAnimation" class="hidden lootbox-opening">
+            <div class="chest-container">
+                <div class="chest" id="animatedChest">🎁</div>
+            </div>
+            <div class="opening-text" id="openingText">Открываем лутбокс...</div>
+            <div id="revealedCard" class="hidden">
+                <div class="revealed-card" id="cardContent">
+                    <h3 id="cardName"></h3>
+                    <div class="revealed-rarity" id="cardRarity"></div>
+                    <div>🎉 Поздравляем с получением карты!</div>
+                </div>
+            </div>
+            <button class="close-animation" onclick="closeAnimation()">Закрыть</button>
+        </div>
+        
+        <!-- Loading Screen -->
+        <div id="loadingScreen" class="hidden">
+            <div class="loading">
+                <div>🔄 Загрузка...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game data
+        let gameData = {
+            userType: '', // 'student' or 'adult'
+            currentClass: 1,
+            classLetter: 'А',
+            city: '',
+            school: '',
+            coins: 100, // Start with 100 coins
+            xp: 0,
+            cards: [],
+            profile: {
+                display_name: "Игрок",
+                total_quizzes: 0,
+                correct_answers: 0,
+                rating: 1000
+            }
+        };
+
+        // All BrainRot cards with updated rarity order and added 67 character
+        const ALL_CARDS = [
+            // Обычные
+            { name: "Пипи киви", rarity: "common", obtained: false },
+            { name: "Агарини ла палини", rarity: "common", obtained: false },
+            { name: "Бр бр патапим", rarity: "common", obtained: false },
+            
+            // Рарные
+            { name: "Трипи тропа", rarity: "rare", obtained: false },
+            { name: "Чуханини таконини", rarity: "rare", obtained: false },
+            { name: "Гататито няунито", rarity: "rare", obtained: false },
+            
+            // Эпик
+            { name: "Гарама и мадунг", rarity: "epic", obtained: false },
+            { name: "Каркекар куркур", rarity: "epic", obtained: false },
+            { name: "Та та та сахур", rarity: "epic", obtained: false },
+            { name: "То то то сахур", rarity: "epic", obtained: false },
+            { name: "Ла какркеркар комбинасион", rarity: "epic", obtained: false },
+            { name: "Ла спуки гранде", rarity: "epic", obtained: false },
+            { name: "Джоб джоб сахур", rarity: "epic", obtained: false },
+            { name: "Лос бомбинитос", rarity: "epic", obtained: false },
+            
+            // Легендарные
+            { name: "Лос джобситос", rarity: "legendary", obtained: false },
+            { name: "Тунг сахур", rarity: "legendary", obtained: false },
+            { name: "Скал скал скал", rarity: "legendary", obtained: false },
+            { name: "Бразилини бэримбини", rarity: "legendary", obtained: false },
+            { name: "Дул дул дул", rarity: "legendary", obtained: false },
+            
+            // Секретные
+            { name: "Ла секрет комбинасион", rarity: "secret", obtained: false },
+            { name: "Спагетти туалети", rarity: "secret", obtained: false },
+            { name: "Драгон канелони", rarity: "secret", obtained: false },
+            { name: "Ла эсок сэкола", rarity: "secret", obtained: false },
+            { name: "Пот хоспот", rarity: "secret", obtained: false },
+            { name: "Шпиониро голубиро", rarity: "secret", obtained: false },
+            { name: "Туртугини драгон фрутини", rarity: "secret", obtained: false },
+            
+            // OG
+            { name: "Стровбэри элифэнт", rarity: "og", obtained: false },
+            { name: "Миявл", rarity: "og", obtained: false },
+            
+            // God BrainRot - HIGHEST RARITY
+            { name: "Трипа тропа", rarity: "god", obtained: false },
+            { name: "Ла гранде комбинасион", rarity: "god", obtained: false },
+            { name: "67", rarity: "god", obtained: false }
+        ];
+
+        // Lootbox configurations
+        const LOOTBOXES = {
+            common: {
+                price: 100,
+                currency: 'coins',
+                chances: {
+                    common: 70,
+                    rare: 25,
+                    epic: 5
+                }
+            },
+            epic: {
+                price: 500,
+                currency: 'coins',
+                chances: {
+                    rare: 50,
+                    epic: 40,
+                    legendary: 10
+                }
+            },
+            legendary: {
+                price: 199,
+                currency: 'money',
+                chances: {
+                    epic: 40,
+                    legendary: 35,
+                    secret: 20,
+                    og: 5
+                }
+            },
+            secret: {
+                price: 499,
+                currency: 'money',
+                chances: {
+                    legendary: 40,
+                    secret: 30,
+                    og: 20,
+                    god: 10
+                }
+            }
+        };
+
+        // Quiz questions for general knowledge
+        const GENERAL_KNOWLEDGE_QUESTIONS = [
+            // Наука
+            {q: "Какая планета известна как 'Красная планета'?", opts: ["Венера", "Марс", "Юпитер", "Сатурн"], a: 1},
+            {q: "Сколько элементов в периодической таблице?", opts: ["118", "92", "150", "108"], a: 0},
+            {q: "Что измеряется в герцах?", opts: ["Напряжение", "Частота", "Сопротивление", "Мощность"], a: 1},
+            {q: "Какое животное является самым большим на Земле?", opts: ["Слон", "Синий кит", "Жираф", "Белая акула"], a: 1},
+            
+            // География
+            {q: "Какая самая длинная река в мире?", opts: ["Амазонка", "Нил", "Янцзы", "Миссисипи"], a: 0},
+            {q: "В какой стране находится пирамида Хеопса?", opts: ["Греция", "Египет", "Мексика", "Италия"], a: 1},
+            {q: "Какая столица Австралии?", opts: ["Сидней", "Мельбурн", "Канберра", "Брисбен"], a: 2},
+            
+            // История
+            {q: "В каком году началась Вторая мировая война?", opts: ["1939", "1941", "1945", "1935"], a: 0},
+            {q: "Кто был первым человеком в космосе?", opts: ["Нил Армстронг", "Юрий Гагарин", "Алан Шепард", "Валентина Терешкова"], a: 1},
+            
+            // Литература
+            {q: "Кто написал 'Войну и мир'?", opts: ["Достоевский", "Толстой", "Чехов", "Тургенев"], a: 1},
+            {q: "Как звали главного героя 'Евгения Онегина'?", opts: ["Владимир", "Александр", "Евгений", "Петр"], a: 2},
+            
+            // Общие знания
+            {q: "Сколько сторон у шестиугольника?", opts: ["5", "6", "7", "8"], a: 1},
+            {q: "Какое химическое обозначение у золота?", opts: ["Go", "Gd", "Au", "Ag"], a: 2},
+            {q: "Кто нарисовал 'Мону Лизу'?", opts: ["Ван Гог", "Пикассо", "Леонардо да Винчи", "Микеланджело"], a: 2},
+            {q: "Какой океан самый большой?", opts: ["Атлантический", "Индийский", "Тихий", "Северный Ледовитый"], a: 2},
+            
+            // Логика
+            {q: "Продолжи последовательность: 2, 4, 8, 16...", opts: ["24", "32", "20", "18"], a: 1},
+            {q: "Если все вороны черные, а эта птица не черная, то она...", opts: ["не ворон", "ворон", "сова", "голубь"], a: 0},
+            
+            // Культура
+            {q: "В каком городе находится статуя Христа-Искупителя?", opts: ["Буэнос-Айрес", "Рио-де-Жанейро", "Лима", "Сантьяго"], a: 1},
+            {q: "Кто написал музыку к 'Лебединому озеру'?", opts: ["Чайковский", "Бах", "Моцарт", "Бетховен"], a: 0}
+        ];
+
+        let currentQuiz = {
+            questions: [],
+            currentQuestion: 0,
+            correctAnswers: 0
+        };
+
+        // Database of Russian cities and schools (including Yuzhno-Sakhalinsk)
+        const RUSSIAN_CITIES = [
+            "Москва", "Санкт-Петербург", "Новосибирск", "Екатеринбург", "Нижний Новгород",
+            "Казань", "Челябинск", "Омск", "Самара", "Ростов-на-Дону", "Уфа", "Красноярск",
+            "Воронеж", "Пермь", "Волгоград", "Краснодар", "Саратов", "Тюмень", "Тольятти",
+            "Ижевск", "Барнаул", "Ульяновск", "Иркутск", "Владивосток", "Ярославль", "Хабаровск",
+            "Махачкала", "Оренбург", "Томск", "Новокузнецк", "Кемерово", "Астрахань", "Рязань",
+            "Пенза", "Набережные Челны", "Липецк", "Тула", "Киров", "Чебоксары", "Калининград",
+            "Курск", "Улан-Удэ", "Ставрополь", "Сочи", "Тверь", "Магнитогорск", "Иваново",
+            "Брянск", "Белгород", "Сургут", "Южно-Сахалинск"
+        ];
+
+        // Function to generate schools for a city
+        function generateSchoolsForCity(city) {
+            const schools = [];
+            
+            // Generate schools including Gimnaziya 3 for Yuzhno-Sakhalinsk
+            const schoolCount = 10 + Math.floor(Math.random() * 6);
+            
+            for (let i = 1; i <= schoolCount; i++) {
+                const types = ["СОШ", "Гимназия", "Лицей"];
+                const type = types[Math.floor(Math.random() * types.length)];
+                
+                let schoolName;
+                if (type === "СОШ") {
+                    schoolName = `Средняя общеобразовательная школа №${i}`;
+                } else if (type === "Гимназия") {
+                    schoolName = `Гимназия №${i}`;
+                } else {
+                    schoolName = `Лицей №${i}`;
+                }
+                
+                schools.push(schoolName);
+            }
+            
+            // Add some special schools
+            schools.push(`Физико-математический лицей ${city}`);
+            schools.push(`Гуманитарная гимназия ${city}`);
+            schools.push(`Школа с углубленным изучением иностранных языков ${city}`);
+            
+            return schools;
+        }
+
+        // City-schools database
+        const SCHOOLS_DATABASE = {};
+        RUSSIAN_CITIES.forEach(city => {
+            SCHOOLS_DATABASE[city] = generateSchoolsForCity(city);
+        });
+
+// Initialize the game
+function initGame() {
+    // СНАЧАЛА СКРЫВАЕМ ЛУТБОКС
+    document.getElementById('lootboxAnimation').classList.add('hidden');
+    
+    // Check if user is already registered
+    const savedData = localStorage.getItem('brainrotGameData');
+    if (savedData) {
+        gameData = JSON.parse(savedData);
+        showMain();
+    } else {
+        showRegistration();
+    }
+    
+    // Load cities into selects
+    loadCities();
+    
+    updateUI();
+    
+    // Setup class preview
+    setupClassPreview();
+    setupEditClassPreview();
+    
+    // Telegram Web App integration
+    if (window.Telegram && Telegram.WebApp) {
+        Telegram.WebApp.expand();
+        Telegram.WebApp.ready();
+        Telegram.WebApp.setHeaderColor('#667eea');
+        Telegram.WebApp.setBackgroundColor('#667eea');
+    }
+}
+
+        // Load cities into select elements
+        function loadCities() {
+            const citySelect = document.getElementById('citySelect');
+            const editCitySelect = document.getElementById('editCitySelect');
+            
+            RUSSIAN_CITIES.sort().forEach(city => {
+                const option = document.createElement('option');
+                option.value = city;
+                option.textContent = city;
+                citySelect.appendChild(option);
+                
+                const editOption = document.createElement('option');
+                editOption.value = city;
+                editOption.textContent = city;
+                editCitySelect.appendChild(editOption);
+            });
+        }
+
+        // Load schools for selected city
+        function loadSchools() {
+            const citySelect = document.getElementById('citySelect');
+            const schoolSelect = document.getElementById('schoolSelect');
+            const selectedCity = citySelect.value;
+            
+            schoolSelect.innerHTML = '<option value="">Загрузка школ...</option>';
+            schoolSelect.disabled = true;
+            
+            // Simulate loading delay
+            setTimeout(() => {
+                if (selectedCity && SCHOOLS_DATABASE[selectedCity]) {
+                    schoolSelect.innerHTML = '<option value="">Выберите школу</option>';
+                    SCHOOLS_DATABASE[selectedCity].sort().forEach(school => {
+                        const option = document.createElement('option');
+                        option.value = school;
+                        option.textContent = school;
+                        schoolSelect.appendChild(option);
+                    });
+                    schoolSelect.disabled = false;
+                } else {
+                    schoolSelect.innerHTML = '<option value="">Сначала выберите город</option>';
+                    schoolSelect.disabled = true;
+                }
+                updateClassPreview();
+            }, 500);
+        }
+
+        // Load schools for edit form
+        function loadEditSchools() {
+            const citySelect = document.getElementById('editCitySelect');
+            const schoolSelect = document.getElementById('editSchoolSelect');
+            const selectedCity = citySelect.value;
+            
+            schoolSelect.innerHTML = '<option value="">Загрузка школ...</option>';
+            schoolSelect.disabled = true;
+            
+            // Simulate loading delay
+            setTimeout(() => {
+                if (selectedCity && SCHOOLS_DATABASE[selectedCity]) {
+                    schoolSelect.innerHTML = '<option value="">Выберите школу</option>';
+                    SCHOOLS_DATABASE[selectedCity].sort().forEach(school => {
+                        const option = document.createElement('option');
+                        option.value = school;
+                        option.textContent = school;
+                        schoolSelect.appendChild(option);
+                    });
+                    schoolSelect.disabled = false;
+                    
+                    // If editing existing data, try to select current school
+                    if (gameData.school && SCHOOLS_DATABASE[selectedCity].includes(gameData.school)) {
+                        schoolSelect.value = gameData.school;
+                    }
+                } else {
+                    schoolSelect.innerHTML = '<option value="">Сначала выберите город</option>';
+                    schoolSelect.disabled = true;
+                }
+                updateEditClassPreview();
+            }, 500);
+        }
+
+        // Setup class preview in registration form
+        function setupClassPreview() {
+            const classSelect = document.getElementById('classSelect');
+            const letterSelect = document.getElementById('classLetterSelect');
+            const citySelect = document.getElementById('citySelect');
+            const schoolSelect = document.getElementById('schoolSelect');
+            
+            const updatePreview = () => {
+                updateClassPreview();
+            };
+            
+            classSelect.addEventListener('change', updatePreview);
+            letterSelect.addEventListener('change', updatePreview);
+            citySelect.addEventListener('change', updatePreview);
+            schoolSelect.addEventListener('change', updatePreview);
+            
+            updatePreview();
+        }
+
+        function updateClassPreview() {
+            const classNum = document.getElementById('classSelect').value;
+            const letter = document.getElementById('classLetterSelect').value;
+            const city = document.getElementById('citySelect').value || 'Город';
+            const school = document.getElementById('schoolSelect').value || 'Школа';
+            
+            document.getElementById('classPreview').textContent = 
+                `${classNum}${letter} класс, ${school}, ${city}`;
+        }
+
+        // Setup class preview in edit form
+        function setupEditClassPreview() {
+            const classSelect = document.getElementById('editClassSelect');
+            const letterSelect = document.getElementById('editClassLetterSelect');
+            const citySelect = document.getElementById('editCitySelect');
+            const schoolSelect = document.getElementById('editSchoolSelect');
+            
+            const updatePreview = () => {
+                updateEditClassPreview();
+            };
+            
+            classSelect.addEventListener('change', updatePreview);
+            letterSelect.addEventListener('change', updatePreview);
+            citySelect.addEventListener('change', updatePreview);
+            schoolSelect.addEventListener('change', updatePreview);
+        }
+
+        function updateEditClassPreview() {
+            const classNum = document.getElementById('editClassSelect').value;
+            const letter = document.getElementById('editClassLetterSelect').value;
+            const city = document.getElementById('editCitySelect').value || 'Город';
+            const school = document.getElementById('editSchoolSelect').value || 'Школа';
+            
+            document.getElementById('editClassPreview').textContent = 
+                `${classNum}${letter} класс, ${school}, ${city}`;
+        }
+
+        // Save game data to localStorage
+        function saveGameData() {
+            localStorage.setItem('brainrotGameData', JSON.stringify(gameData));
+        }
+
+        // Show registration screen
+        function showRegistration() {
+            document.getElementById('registrationScreen').classList.remove('hidden');
+            document.getElementById('mainScreen').classList.add('hidden');
+            document.getElementById('schoolFormScreen').classList.add('hidden');
+            document.getElementById('quizSection').classList.add('hidden');
+            document.getElementById('quizQuestionsSection').classList.add('hidden');
+            document.getElementById('shopSection').classList.add('hidden');
+            document.getElementById('inventorySection').classList.add('hidden');
+            document.getElementById('collectionSection').classList.add('hidden');
+            document.getElementById('profileSection').classList.add('hidden');
+            document.getElementById('editSchoolForm').classList.add('hidden');
+            document.getElementById('loadingScreen').classList.add('hidden');
+            document.getElementById('lootboxAnimation').classList.add('hidden');
+        }
+
+        // Show school form
+        function showSchoolForm() {
+            document.getElementById('registrationScreen').classList.add('hidden');
+            document.getElementById('schoolFormScreen').classList.remove('hidden');
+        }
+
+        // Show edit school form
+        function showEditSchoolForm() {
+            // Fill form with current data
+            document.getElementById('editCitySelect').value = gameData.city;
+            document.getElementById('editClassSelect').value = gameData.currentClass;
+            document.getElementById('editClassLetterSelect').value = gameData.classLetter;
+            
+            // Load schools for current city
+            loadEditSchools();
+            
+            document.getElementById('profileSection').classList.add('hidden');
+            document.getElementById('editSchoolForm').classList.remove('hidden');
+        }
+
+        // Register user
+        function registerUser(userType) {
+            gameData.userType = userType;
+            if (userType === 'student') {
+                // Student registration will be completed in completeStudentRegistration
+                return;
+            } else {
+                gameData.currentClass = 12; // Special value for adults
+                gameData.coins = 100;
+                saveGameData();
+                showMain();
+                updateUI();
+                alert(`🎉 Добро пожаловать в BrainRot School!`);
+            }
+        }
+
+        // Complete student registration
+        function completeStudentRegistration() {
+            const city = document.getElementById('citySelect').value;
+            const school = document.getElementById('schoolSelect').value;
+            const classNum = parseInt(document.getElementById('classSelect').value);
+            const classLetter = document.getElementById('classLetterSelect').value;
+            
+            if (!city || !school) {
+                alert('Пожалуйста, заполните все поля!');
+                return;
+            }
+            
+            gameData.userType = 'student';
+            gameData.city = city;
+            gameData.school = school;
+            gameData.currentClass = classNum;
+            gameData.classLetter = classLetter;
+            gameData.coins = 100;
+            
+            saveGameData();
+            showMain();
+            updateUI();
+            
+            alert(`🎉 Добро пожаловать в ${classNum}${classLetter} класс!\n🏫 ${school}, ${city}`);
+        }
+
+        // Save school changes
+        function saveSchoolChanges() {
+            const city = document.getElementById('editCitySelect').value;
+            const school = document.getElementById('editSchoolSelect').value;
+            const classNum = parseInt(document.getElementById('editClassSelect').value);
+            const classLetter = document.getElementById('editClassLetterSelect').value;
+            
+            if (!city || !school) {
+                alert('Пожалуйста, заполните все поля!');
+                return;
+            }
+            
+            gameData.city = city;
+            gameData.school = school;
+            gameData.currentClass = classNum;
+            gameData.classLetter = classLetter;
+            
+            saveGameData();
+            showSection('profile');
+            updateUI();
+            
+            alert(`✅ Информация о школе обновлена!\n🏫 ${classNum}${classLetter} класс, ${school}, ${city}`);
+        }
+
+        // Confirm purchase function
+        function confirmPurchase(type) {
+            const lootbox = LOOTBOXES[type];
+            const currencyText = lootbox.currency === 'coins' ? 'монеты' : 'реальные деньги';
+            const priceText = lootbox.currency === 'coins' ? `${lootbox.price} монет` : `${lootbox.price}₽`;
+            
+            if (confirm(`Вы уверены, что хотите купить ${type} лутбокс за ${priceText}?`)) {
+                buyLootbox(type);
+            }
+        }
+
+        // Buy lootbox function
+        function buyLootbox(type) {
+            const lootbox = LOOTBOXES[type];
+            
+            if (lootbox.currency === 'coins') {
+                if (gameData.coins < lootbox.price) {
+                    alert(`❌ Недостаточно монет! Нужно: ${lootbox.price}💰`);
+                    return;
+                }
+                gameData.coins -= lootbox.price;
+            } else {
+                // For real money purchases - simulate payment
+                alert(`💳 Платежная система временно недоступна. Лутбокс получен бесплатно!`);
+            }
+            
+            // Show opening animation
+            showLootboxAnimation(type);
+        }
+
+        // Show lootbox opening animation
+        function showLootboxAnimation(type) {
+            const animation = document.getElementById('lootboxAnimation');
+            const chest = document.getElementById('animatedChest');
+            const openingText = document.getElementById('openingText');
+            const revealedCard = document.getElementById('revealedCard');
+            
+            // Set chest style based on type
+            chest.className = 'chest ' + type;
+            
+            // Reset animation state
+            revealedCard.classList.add('hidden');
+            openingText.textContent = 'Открываем лутбокс...';
+            
+            // Show animation
+            animation.classList.remove('hidden');
+            
+            // Open lootbox after delay
+            setTimeout(() => {
+                const card = openLootbox(type);
+                openingText.textContent = '🎉 Вы получили карту!';
+                revealCard(card);
+                
+                // Save game data
+                saveGameData();
+                updateUI();
+            }, 2000);
+        }
+
+        // Reveal card in animation
+        function revealCard(card) {
+            const revealedCard = document.getElementById('revealedCard');
+            const cardName = document.getElementById('cardName');
+            const cardRarity = document.getElementById('cardRarity');
+            const cardContent = document.getElementById('cardContent');
+            
+            cardName.textContent = card.name;
+            cardRarity.textContent = getRarityName(card.rarity);
+            cardContent.className = `revealed-card ${card.rarity}`;
+            
+            revealedCard.classList.remove('hidden');
+        }
+
+        // Close animation
+        function closeAnimation() {
+            document.getElementById('lootboxAnimation').classList.add('hidden');
+            showMain();
+        }
+
+        // Open lootbox and get random card
+        function openLootbox(type) {
+            const lootbox = LOOTBOXES[type];
+            const random = Math.random() * 100;
+            let selectedRarity = '';
+            let cumulative = 0;
+            
+            // Determine rarity based on chances
+            for (const [rarity, chance] of Object.entries(lootbox.chances)) {
+                cumulative += chance;
+                if (random <= cumulative) {
+                    selectedRarity = rarity;
+                    break;
+                }
+            }
+            
+            // Get available cards of selected rarity
+            const availableCards = ALL_CARDS.filter(card => 
+                card.rarity === selectedRarity && !card.obtained
+            );
+            
+            let selectedCard;
+            
+            if (availableCards.length > 0) {
+                // Get random card from available
+                selectedCard = availableCards[Math.floor(Math.random() * availableCards.length)];
+            } else {
+                // If no available cards, get any card of that rarity
+                const allRarityCards = ALL_CARDS.filter(card => card.rarity === selectedRarity);
+                selectedCard = allRarityCards[Math.floor(Math.random() * allRarityCards.length)];
+            }
+            
+            // Mark card as obtained
+            selectedCard.obtained = true;
+            return selectedCard;
+        }
+
+        // Helper function to get card by name
+        function getCard(cardName) {
+            return ALL_CARDS.find(card => card.name === cardName) || ALL_CARDS[0];
+        }
+
+        // Update UI with current game data
+        function updateUI() {
+            // Update stats
+            document.getElementById('currentClass').textContent = 
+                gameData.userType === 'adult' ? 'Взрослый' : `${gameData.currentClass}${gameData.classLetter}`;
+            document.getElementById('userTypeInfo').textContent = 
+                gameData.userType === 'adult' ? 'взрослый' : 'ученик';
+            document.getElementById('coinsCount').textContent = gameData.coins;
+            
+            // Update user greeting
+            if (gameData.userType === 'student') {
+                document.getElementById('userGreeting').textContent = 
+                    `${gameData.currentClass}${gameData.classLetter} класс, ${gameData.school}`;
+                document.getElementById('fullClassInfo').textContent = 
+                    `${gameData.currentClass}${gameData.classLetter} класс, ${gameData.school}, ${gameData.city}`;
+            } else {
+                document.getElementById('userGreeting').textContent = 'Собирай мемы, стань легендой!';
+                document.getElementById('fullClassInfo').textContent = 'Режим для взрослых';
+            }
+            
+            // Update collection progress
+            const collected = ALL_CARDS.filter(card => card.obtained).length;
+            const total = ALL_CARDS.length;
+            const progress = total > 0 ? (collected / total) * 100 : 0;
+            
+            document.getElementById('collectedCards').textContent = collected;
+            document.getElementById('totalCards').textContent = total;
+            document.getElementById('collectionProgress').style.width = progress + '%';
+            
+            // Load inventory
+            loadInventory();
+            
+            // Load collection
+            loadCollection();
+            
+            // Load profile
+            loadProfile();
+        }
+
+        // Load inventory (obtained cards)
+        function loadInventory() {
+            const container = document.getElementById('inventoryList');
+            container.innerHTML = '';
+            
+            const obtainedCards = ALL_CARDS.filter(card => card.obtained);
+            
+            if (obtainedCards.length === 0) {
+                container.innerHTML = '<div style="text-align: center; color: rgba(255,255,255,0.7);">🎴 Пока нет карточек</div>';
+                return;
+            }
+            
+            obtainedCards.forEach(card => {
+                const cardElement = document.createElement('div');
+                cardElement.className = `card ${card.rarity}`;
+                
+                cardElement.innerHTML = `
+                    <h3>${card.name}</h3>
+                    <div class="card-meta">
+                        <span class="rarity-badge ${card.rarity}-badge">${getRarityName(card.rarity)}</span>
+                        <span>✅ Получена</span>
+                    </div>
+                `;
+                
+                container.appendChild(cardElement);
+            });
+        }
+
+        // Load all collection
+        function loadCollection() {
+            const container = document.getElementById('collectionList');
+            container.innerHTML = '';
+            
+            // Sort cards by rarity (new order: common -> rare -> epic -> legendary -> secret -> og -> god)
+            const sortedCards = [...ALL_CARDS].sort((a, b) => {
+                const rarityOrder = { 
+                    common: 0, 
+                    rare: 1, 
+                    epic: 2, 
+                    legendary: 3, 
+                    secret: 4, 
+                    og: 5, 
+                    god: 6 
+                };
+                return rarityOrder[a.rarity] - rarityOrder[b.rarity];
+            });
+            
+            sortedCards.forEach(card => {
+                const cardElement = document.createElement('div');
+                cardElement.className = `card ${card.rarity}`;
+                if (!card.obtained) {
+                    cardElement.style.opacity = '0.6';
+                }
+                
+                cardElement.innerHTML = `
+                    <h3>${card.name}</h3>
+                    <div class="card-meta">
+                        <span class="rarity-badge ${card.rarity}-badge">${getRarityName(card.rarity)}</span>
+                        <span>${card.obtained ? '✅ Получена' : '🔒 Не получена'}</span>
+                    </div>
+                `;
+                
+                container.appendChild(cardElement);
+            });
+        }
+
+        // Load profile
+        function loadProfile() {
+            const container = document.getElementById('profileContent');
+            const schoolContainer = document.getElementById('schoolInfo');
+            const profile = gameData.profile;
+            
+            const totalQuestions = profile.total_quizzes * 5;
+            const accuracy = totalQuestions > 0 ? (profile.correct_answers / totalQuestions) * 100 : 0;
+            const collected = ALL_CARDS.filter(card => card.obtained).length;
+            
+            container.innerHTML = `
+                <div class="profile-info">
+                    <div><strong>${gameData.userType === 'student' ? '🎒 Ученик' : '👨‍🎓 Взрослый'}</strong></div>
+                    <div>⭐ XP: ${gameData.xp}</div>
+                    <div>💰 Монеты: ${gameData.coins}</div>
+                    <div>🎴 Карт: ${collected}/${ALL_CARDS.length}</div>
+                    <div>📊 Квизов: ${profile.total_quizzes}</div>
+                    <div>🎯 Точность: ${accuracy.toFixed(1)}%</div>
+                    <div>🏆 Рейтинг: ${profile.rating}</div>
+                </div>
+            `;
+            
+            if (gameData.userType === 'student') {
+                schoolContainer.innerHTML = `
+                    <div class="profile-info">
+                        <div>🏙️ Город: ${gameData.city}</div>
+                        <div>🏫 Школа: ${gameData.school}</div>
+                        <div>🎒 Класс: ${gameData.currentClass}${gameData.classLetter}</div>
+                        <div>👥 Одноклассников в группе: <strong>Автоматически все!</strong></div>
+                    </div>
+                `;
+            } else {
+                schoolContainer.innerHTML = `
+                    <div class="profile-info">
+                        <div>👨‍🎓 Режим для взрослых</div>
+                        <div>🎓 Статус: Студент/Выпускник</div>
+                    </div>
+                `;
+            }
+        }
+
+        // Rarity helpers
+        function getRarityName(rarity) {
+            const names = {
+                "common": "Обычный",
+                "rare": "Рарный", 
+                "epic": "Эпик",
+                "legendary": "Легенда",
+                "secret": "Секретный",
+                "og": "OG",
+                "god": "👑 Бог BrainRot"
+            };
+            return names[rarity] || "Обычный";
+        }
+
+        // Navigation functions
+        function showSection(section) {
+            document.getElementById('registrationScreen').classList.add('hidden');
+            document.getElementById('mainScreen').classList.add('hidden');
+            document.getElementById('schoolFormScreen').classList.add('hidden');
+            document.getElementById('quizSection').classList.add('hidden');
+            document.getElementById('quizQuestionsSection').classList.add('hidden');
+            document.getElementById('shopSection').classList.add('hidden');
+            document.getElementById('inventorySection').classList.add('hidden');
+            document.getElementById('collectionSection').classList.add('hidden');
+            document.getElementById('profileSection').classList.add('hidden');
+            document.getElementById('editSchoolForm').classList.add('hidden');
+            document.getElementById('loadingScreen').classList.add('hidden');
+            document.getElementById('lootboxAnimation').classList.add('hidden');
+            
+            document.getElementById(section + 'Section').classList.remove('hidden');
+        }
+        
+        function showMain() {
+            document.getElementById('mainScreen').classList.remove('hidden');
+            document.getElementById('registrationScreen').classList.add('hidden');
+            document.getElementById('schoolFormScreen').classList.add('hidden');
+            document.getElementById('quizSection').classList.add('hidden');
+            document.getElementById('quizQuestionsSection').classList.add('hidden');
+            document.getElementById('shopSection').classList.add('hidden');
+            document.getElementById('inventorySection').classList.add('hidden');
+            document.getElementById('collectionSection').classList.add('hidden');
+            document.getElementById('profileSection').classList.add('hidden');
+            document.getElementById('editSchoolForm').classList.add('hidden');
+            document.getElementById('loadingScreen').classList.add('hidden');
+            document.getElementById('lootboxAnimation').classList.add('hidden');
+        }
+
+        // Show quiz questions section
+        function showQuizQuestions() {
+            document.getElementById('registrationScreen').classList.add('hidden');
+            document.getElementById('mainScreen').classList.add('hidden');
+            document.getElementById('schoolFormScreen').classList.add('hidden');
+            document.getElementById('quizSection').classList.add('hidden');
+            document.getElementById('quizQuestionsSection').classList.remove('hidden');
+            document.getElementById('shopSection').classList.add('hidden');
+            document.getElementById('inventorySection').classList.add('hidden');
+            document.getElementById('collectionSection').classList.add('hidden');
+            document.getElementById('profileSection').classList.add('hidden');
+            document.getElementById('editSchoolForm').classList.add('hidden');
+            document.getElementById('loadingScreen').classList.add('hidden');
+            document.getElementById('lootboxAnimation').classList.add('hidden');
+        }
+
+        // Start quiz
+        function startQuiz() {
+            // Select 5 random questions
+            const shuffledQuestions = [...GENERAL_KNOWLEDGE_QUESTIONS]
+                .sort(() => 0.5 - Math.random())
+                .slice(0, 5);
+            
+            currentQuiz = {
+                questions: shuffledQuestions,
+                currentQuestion: 0,
+                correctAnswers: 0
+            };
+            
+            showQuizQuestions();
+            showQuizQuestion(0);
+        }
+
+        // Show quiz question
+        function showQuizQuestion(questionIndex) {
+            const question = currentQuiz.questions[questionIndex];
+            
+            document.getElementById('currentQuestionNumber').textContent = questionIndex + 1;
+            document.getElementById('quizQuestion').textContent = question.q;
+            
+            const optionsContainer = document.getElementById('quizOptions');
+            optionsContainer.innerHTML = '';
+            
+            question.opts.forEach((option, index) => {
+                const optionElement = document.createElement('button');
+                optionElement.className = 'quiz-option';
+                optionElement.textContent = option;
+                optionElement.onclick = () => checkAnswer(questionIndex, index);
+                optionsContainer.appendChild(optionElement);
+            });
+        }
+
+        // Check answer
+        function checkAnswer(questionIndex, answerIndex) {
+            const question = currentQuiz.questions[questionIndex];
+            
+            if (answerIndex === question.a) {
+                currentQuiz.correctAnswers++;
+                gameData.xp += 10;
+            }
+            
+            // Next question or finish quiz
+            if (questionIndex < currentQuiz.questions.length - 1) {
+                currentQuiz.currentQuestion++;
+                showQuizQuestion(currentQuiz.currentQuestion);
+            } else {
+                finishQuiz();
+            }
+        }
+
+        // Finish quiz - REMOVED CARD REWARDS
+        function finishQuiz() {
+            const correct = currentQuiz.correctAnswers;
+            const total = currentQuiz.questions.length;
+            const coinsReward = correct * 20; // 20 coins per correct answer
+            
+            gameData.coins += coinsReward;
+            gameData.profile.total_quizzes += 1;
+            gameData.profile.correct_answers += correct;
+            
+            saveGameData();
+            updateUI();
+            showSection('quiz');
+            
+            alert(`🎉 Квиз завершен!\n✅ Правильных ответов: ${correct}/${total}\n💰 Награда: +${coinsReward} монет`);
+        }
+
+        // Initialize game when page loads
+        document.addEventListener('DOMContentLoaded', initGame);
+    </script>
+</body>
+</html>
